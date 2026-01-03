@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三合一計劃</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 12px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* ===================== */
+/* 💻 電腦：表格模式 */
+/* ===================== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th {
+  background: #eef2f7;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ===================== */
+/* 📱 手機：卡片模式 */
+/* ===================== */
+@media (max-width: 768px) {
+
+  table, thead {
+    display: none;
+  }
+
+  tbody {
+    display: block;
+  }
+
+  tbody tr {
+    background: #fff;
+    margin-bottom: 14px;
+    padding: 14px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+
+  tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    text-align: left;
+  }
+
+  tbody td::before {
+    font-weight: 600;
+    color: #555;
+  }
+
+  tbody td:nth-child(1)::before { content: "服務"; }
+  tbody td:nth-child(2)::before { content: "合約"; }
+  tbody td:nth-child(3)::before { content: "價錢"; }
+  tbody td:nth-child(4)::before { content: "客戶類型"; }
+  tbody td:nth-child(5)::before { content: "優惠"; }
+  tbody td:nth-child(6)::before { content: "首年"; }
+  tbody td:nth-child(7)::before { content: "2年"; }
+
+  .year1, .year2 {
+    font-weight: bold;
+    color: #007aff;
+    font-size: 18px;
+  }
+
+  select {
+    width: 65%;
+    font-size: 16px;
+  }
+}
+
+/* ===================== */
+/* 平均月費 */
+/* ===================== */
+.total-box {
+  margin: 20px auto;
+  max-width: 1100px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+#avg {
+  color: #007aff;
+  font-weight: bold;
+  font-size: 26px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>三合一計劃</h1>
+
+<table>
+<thead>
+<tr>
+  <th>服務</th>
+  <th>合約期</th>
+  <th>每月 / 每年</th>
+  <th>特選客戶</th>
+  <th>優惠</th>
+  <th>首年總價</th>
+  <th>2年總價</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+  <td><select onchange="onServiceChange(this)"></select></td>
+  <td><select onchange="calculateRow(this)"></select></td>
+  <td class="price">-</td>
+  <td class="special"><select onchange="calculateRow(this)"><option value="0">-</option></select></td>
+  <td class="discount">-</td>
+  <td class="year1">-</td>
+  <td class="year2">-</td>
+</tr>
+
+<tr>
+  <td><select onchange="onServiceChange(this)"></select></td>
+  <td><select onchange="calculateRow(this)"></select></td>
+  <td class="price">-</td>
+  <td class="special"><select onchange="calculateRow(this)"><option value="0">-</option></select></td>
+  <td class="discount">-</td>
+  <td class="year1">-</td>
+  <td class="year2">-</td>
+</tr>
+
+<tr>
+  <td><select onchange="onServiceChange(this)"></select></td>
+  <td><select onchange="calculateRow(this)"></select></td>
+  <td class="price">-</td>
+  <td class="special"><select onchange="calculateRow(this)"><option value="0">-</option></select></td>
+  <td class="discount">-</td>
+  <td class="year1">-</td>
+  <td class="year2">-</td>
+</tr>
+</tbody>
+</table>
+
+<div class="total-box">
+平均每月費用：<span id="avg">-</span>
+</div>
+
+<script>
+// ===== 唯一資料來源 =====
+const serviceData = {
+  "網絡-Telus (250M)": {
+    fee: 48,
+    special: {
+      options: [
+        { text: "有RBC", extra: 0 },
+        { text: "沒有RBC", extra: 10 }
+      ]
+    },
+    contracts: {
+      24: {  }
+    }
+  },
+
+  "網絡-Telus (1000M)": {
+    fee: 58,
+    special: {
+      options: [
+        { text: "有RBC", extra: 0 },
+        { text: "沒有RBC", extra: 10 }
+      ]
+    },
+    contracts: {
+      24: {  }
+    }
+  },
+
+  
+  "網絡-Rogers (300M)": {
+    fee: 55,
+    special: {
+      options: [
+        { text: "有Rogers/Fido手機", extra: 0 },
+        { text: "沒有Rogers/Fido手機", extra: 10 }
+      ]
+    },
+    contracts: {
+      24: { credit: 200 }
+    }
+  },
+
+  "網絡-Rogers (1000M)": {
+    fee: 55,
+    special: {
+      options: [
+        { text: "有Rogers/Fido手機", extra: 0 },
+        { text: "沒有Rogers/Fido手機", extra: 10 }
+      ]
+    },
+    contracts: {
+      24: { credit: 200 }
+    }
+  },
+
+  "網絡-Rogers (2000M)": {
+    fee: 65,
+    special: {
+      options: [
+        { text: "有Rogers/Fido手機", extra: 0 },
+        { text: "沒有Rogers/Fido手機", extra: 10 }
+      ]
+    },
+    contracts: {
+      24: { credit: 200 }
+    }
+  },
+
+  "TVB電視": {
+    fee: 11.99,
+    contracts: {
+      12: { free: 3 },
+      18: { free: 4 }
+    }
+  },
+
+  "電視": {
+    yearly: 69.99,
+    contracts: {
+      15: {free: 3}
+    }
+  },
+
+  "攝像頭": {
+    fee: 9.99,
+    contracts: {
+      24: { camera: true }
+    }
+  },
+
+  "電話": {
+    fee: 8.99,
+    contracts: {
+      18: { phone: true }
+    }
+  }
+};
+
+// ===== 初始化 =====
+document.querySelectorAll("tbody tr").forEach(row => {
+  const serviceSel = row.querySelectorAll("select")[0];
+  serviceSel.innerHTML = '<option value="">-- 選擇服務 --</option>';
+  Object.keys(serviceData).forEach(name => {
+    serviceSel.innerHTML += `<option value="${name}">${name}</option>`;
+  });
+
+  row.querySelectorAll("select")[1].innerHTML =
+    '<option value="">-- 合約期 --</option>';
+});
+
+// ===== 服務變更 =====
+function onServiceChange(sel) {
+  const row = sel.closest("tr");
+  const contractSel = row.querySelectorAll("select")[1];
+  const specialSel = row.querySelector(".special select");
+
+  contractSel.innerHTML = '<option value="">-- 合約期 --</option>';
+  specialSel.innerHTML = '<option value="0">-</option>';
+  clearRow(row);
+
+  const d = serviceData[sel.value];
+  if (!d) return;
+
+  Object.keys(d.contracts).forEach(m => {
+    contractSel.innerHTML += `<option value="${m}">${m} 個月</option>`;
+  });
+
+  const priceCell = row.querySelector(".price");
+
+if (d.yearly) {
+  priceCell.innerText = `$${d.yearly} / 年`;
+}
+else if (d.fee) {
+  priceCell.innerText = `$${d.fee} / 月`;
+}
+else {
+  priceCell.innerText = "-";
+}
+
+  if (d.special) {
+    specialSel.innerHTML = "";
+    d.special.options.forEach(o => {
+      specialSel.innerHTML +=
+        `<option value="${o.extra}">${o.text}</option>`;
+    });
+  }
+}
+
+// ===== 計算 =====
+function calculateRow(sel) {
+  const row = sel.closest("tr");
+  const service = row.querySelectorAll("select")[0].value;
+  const months = row.querySelectorAll("select")[1].value;
+  const d = serviceData[service];
+  if (!d || !months) return;
+
+  const extra = parseFloat(row.querySelector(".special select").value || 0);
+  const baseFee = d.fee ? d.fee + extra : 0;
+
+  // ===== 即時更新每月 / 每年價錢顯示（只影響 Telus 網絡）=====
+if (d.fee && extra !== 0) {
+  row.querySelector(".price").innerText = `$${baseFee} / 月`;
+} else if (d.fee) {
+  row.querySelector(".price").innerText = `$${d.fee} / 月`;
+}
+
+
+  let year1 = 0;
+  let year2 = 0;
+  let text = "-";
+
+  if (d.yearly) {
+    year1 = d.yearly;
+    year2 = d.yearly * 2;
+  }
+  else if (d.contracts[months].camera) {
+    year1 = 4.99 * 5 + 9.99 * 6;
+    year2 = year1 + 9.99 * 12;
+    text = "首月免費，2~6月 $4.99";
+  }
+  else if (d.contracts[months].phone) {
+    year1 = 4.49 * 6 + 9.99 * 6;
+    year2 = year1 + 9.99 * 12;
+    text = "首半年 $4.49";
+  }
+  else {
+    const rule = d.contracts[months];
+    const free = rule.free || 0;
+    const credit = rule.credit || 0;
+
+    year1 = baseFee * (12 - free) - credit;
+    year2 = year1 + baseFee * 12;
+
+    if (credit) text = `-$${credit} Credit`;
+    else if (free) text = `免費 ${free} 個月`;
+  }
+
+  row.querySelector(".discount").innerText = text;
+  row.querySelector(".year1").innerText = "$" + year1.toFixed(2);
+  row.querySelector(".year2").innerText = "$" + year2.toFixed(2);
+
+  calcAvg();
+}
+
+// ===== 清空 =====
+function clearRow(row) {
+  row.querySelectorAll(".price,.discount,.year1,.year2")
+    .forEach(c => c.innerText = "-");
+  calcAvg();
+}
+
+// ===== 平均每月 =====
+function calcAvg() {
+  let total = 0;
+  document.querySelectorAll(".year2").forEach(c => {
+    if (c.innerText.startsWith("$")) {
+      total += parseFloat(c.innerText.slice(1));
+    }
+  });
+  document.getElementById("avg").innerText =
+    total ? `$${(total / 24).toFixed(2)}` : "-";
+}
+</script>
+
+</body>
+</html>
