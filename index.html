@@ -7,7 +7,7 @@
 
 <style>
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", Arial, sans-serif;
+  font-family: "Microsoft JhengHei", "微軟正黑體", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   background: #f4f6f9;
   padding: 12px;
 }
@@ -15,18 +15,20 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 8px;
+  font-weight: bold; 
 }
 
 .tip {
   text-align: center;
   background: #fff8e1;
-  color: #856404;
-  padding: 10px;
+  color: #e67e22;
+  padding: 12px;
   border-radius: 8px;
   margin: 0 auto 16px auto;
   max-width: 1100px;
-  font-size: 14px;
-  border-left: 4px solid #ffc107;
+  font-size: 16px;
+  border-left: 4px solid #f1c40f;
+  font-weight: 600;
 }
 
 /* ===== 電腦：表格 ===== */
@@ -63,6 +65,7 @@ select {
   transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
   box-sizing: border-box;
+  font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
 }
 
 select.required {
@@ -172,6 +175,16 @@ option {
     color: #007aff;
     font-size: 18px;
   }
+  
+  /* 手機上移除option背景色 */
+  option.network-option,
+  option.tv-option,
+  option.camera-option,
+  option.door-option,
+  option.prime-option,
+  option.phone-option {
+    background-color: transparent !important;
+  }
 }
 </style>
 </head>
@@ -179,7 +192,7 @@ option {
 <body>
 
 <h1>三合一計劃</h1>
-<div class="tip">💡 小提示：選取合約後才能顯示平均每月費用</div>
+<div class="tip">💡 小提示：選取合約後才能顯示平均每月費用（平均每月費用是按2年計算）</div>
 
 <table>
 <thead>
@@ -411,7 +424,6 @@ function initServiceOptions() {
 initServiceOptions();
 
 // ===== 更新價格顯示函數 =====
-// ===== 更新價格顯示函數 =====
 function updatePriceDisplay(row) {
   const service = row.querySelectorAll("select")[0].value;
   const d = serviceData[service];
@@ -510,16 +522,14 @@ function onServiceChange(sel) {
   });
 
   // 初始價格顯示（不含額外費用）
- const priceCell = row.querySelector(".price");
+  const priceCell = row.querySelector(".price");
   if (d.yearly) {
-    // 年費顯示
     if (d.yearly % 1 === 0) {
       priceCell.innerText = `$${d.yearly} / 年`;
     } else {
       priceCell.innerText = `$${d.yearly.toFixed(2)} / 年`;
     }
   } else if (d.fee) {
-    // 月費顯示
     if (d.fee % 1 === 0) {
       priceCell.innerText = `$${d.fee} / 月`;
     } else {
