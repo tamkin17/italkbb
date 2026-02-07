@@ -191,7 +191,7 @@ for(let i=0; i<3; i++){
 
 <div class="total-box">
   <div class="total-item">
-    <span class="total-label">平均每月費用 (稅前)</span>
+    <span class="total-label">平均每月費用 (未稅)</span>
     <span id="avg" class="total-value">-</span>
   </div>
   <div class="total-item">
@@ -279,11 +279,18 @@ function onServiceChange(sel) {
   const contractSel = row.querySelectorAll("select")[1];
   const specialSel = row.querySelector(".special select");
   
+  // 重置下拉選單
   contractSel.innerHTML = '<option value="">-- 合約期 --</option>';
   specialSel.innerHTML = '<option value="0">--特選客戶--</option>';
   
   const d = serviceData[sel.value];
-  if (!d) return;
+  
+  // 修正邏輯：如果沒選到資料 (選了預設值)，要清空所有欄位
+  if (!d) {
+    row.querySelector(".price").innerText = "-"; // 強制清空價錢
+    calculateRow(sel); // 讓這個函數去清空後面的優惠、總價，並重新計算總平均
+    return;
+  }
 
   Object.keys(d.contracts).forEach(m => {
     contractSel.innerHTML += `<option value="${m}">${m} 個月</option>`;
@@ -318,8 +325,10 @@ function calculateRow(sel) {
   const months = row.querySelectorAll("select")[1].value;
   const d = serviceData[service];
   
+  // 嘗試更新價錢 (如果有服務的話)
   updatePriceDisplay(row);
 
+  // 如果沒有服務或沒有合約期，清空後方欄位
   if (!d || !months) {
     row.querySelectorAll(".discount,.year1,.year2").forEach(c => c.innerText = "-");
     calcAvg();
@@ -377,5 +386,4 @@ function calcAvg() {
 }
 </script>
 </body>
-
 </html>
