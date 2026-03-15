@@ -201,15 +201,6 @@ for(let i=0; i<3; i++){
 </div>
 
 <script>
-// ====================  修改重點說明  ====================
-// 1. 針對 "網絡-Telus (3000M)" 的 special 新增兩個選項：
-//    - 有EPP 且 有KOODO/TELUS手機 -$20 (extra = -20) → 優惠顯示 "-50 Credit"
-//    - 有KOODO/TELUS手機 -$10 (extra = -10) → 無額外文字 (credit=0)
-// 2. 原 "有EPP" (extra=0) 保留，原 "沒有EPP" (extra=10) 保留
-// 3. 對應 calculateRow 中，若偵測到服務是 Telus3000 且 特選客戶值為 -20，則手動加上 "-50 Credit" 文字
-// 4. 基礎月費 95，加上 extra 後為實際 baseFee，credit 邏輯為：若 extra = -20 則額外再扣 50 (一次性 credit)
-// 5. 其餘服務邏輯完全保持不變
-// =======================================================
 
 const serviceData = {
   "網絡-Telus (250M)": {
@@ -226,10 +217,10 @@ const serviceData = {
     fee: 95,
     special: { 
       options: [
-        { text: "有EPP", extra: 0 },
-        { text: "沒有EPP", extra: 10 },
-        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20 },      // 新增1
-        { text: "有KOODO/TELUS手機 -$10", extra: -10 }             // 新增2
+        { text: "有EPP", extra: 10 },
+        { text: "沒有EPP", extra: 0 },
+        { text: "有KOODO/TELUS手機 -$10", extra: -10 }             //
+        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20 },      //
       ]
     },
     contracts: { 24: {} }, category: "network"
