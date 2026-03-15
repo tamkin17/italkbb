@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>三合一計劃 </title>
+<title>三合一計劃 (更新TELUS 3000 特選優惠)</title>
 
 <style>
 body {
@@ -226,10 +226,10 @@ const serviceData = {
     fee: 95,
     special: { 
       options: [
-        { text: "有EPP", extra: 10 },
-        { text: "沒有EPP", extra: 0 },
-        { text: "有KOODO/TELUS手機 -$10", extra: -10 } 
-        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20 },      // 
+        { text: "有EPP", extra: 0 },
+        { text: "沒有EPP", extra: 10 },
+        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20 },      // 新增1
+        { text: "有KOODO/TELUS手機 -$10", extra: -10 }             // 新增2
       ]
     },
     contracts: { 24: {} }, category: "network"
@@ -444,7 +444,13 @@ function calcAvg() {
 }
 </script>
 
-
+<!-- 改動說明 (可直接移除) 
+     1. serviceData 中 "網絡-Telus (3000M)" 的 special.options 新增兩筆：
+        - { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20 }
+        - { text: "有KOODO/TELUS手機 -$10", extra: -10 }
+     2. calculateRow 內新增 extraCredit 判斷：若 service 為 Telus3000 且 extra === -20，則增加 credit 50，優惠文字加上 "-50 Credit"
+     3. 一般 Telus 3000 原本的 credit 為 0，因此 extra=-20 時 year1 計算為 baseFee*12 - 50；extra=-10 時無額外 credit，但優惠顯示 "手機-$10 (月費已減)"
+     4. 維持其他服務邏輯不變。
 -->
 </body>
 </html>
