@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
@@ -201,8 +202,6 @@ for(let i=0; i<3; i++){
 </div>
 
 <script>
-
-
 const serviceData = {
   "網絡-Telus (250M)": {
     fee: 63,
@@ -218,11 +217,10 @@ const serviceData = {
     fee: 95,
     special: { 
       options: [
-        { text: "有EPP", extra: 10 },
-        { text: "沒有EPP", extra: 0 },
-        { text: "有KOODO/TELUS手機 -$10", extra: -10 }             // 
-        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20 },      // 
-
+        { text: "有EPP", extra: 0 },
+        { text: "沒有EPP", extra: 10 },
+        { text: "有KOODO/TELUS手機 -$10 ", extra: -10 }
+        { text: "有EPP + KOODO/TELUS手機 -$20 ", extra: -20 },
       ]
     },
     contracts: { 24: {} }, category: "network"
@@ -289,7 +287,6 @@ function onServiceChange(sel) {
   const contractSel = row.querySelectorAll("select")[1];
   const specialSel = row.querySelector(".special select");
   
-  // 重置下拉選單
   contractSel.innerHTML = '<option value="">-- 合約期 --</option>';
   specialSel.innerHTML = '<option value="0">--特選客戶--</option>';
   
@@ -324,8 +321,6 @@ function updatePriceDisplay(row) {
   if (d.yearly) {
     priceCell.innerText = `$${d.yearly} / 年`;
   } else if (d.fee) {
-    // 顯示 月費＋extra 的原始價格 (但 special 會影響 baseFee, 後續計算會正確)
-    // 只是展示用，不影響實際計算
     priceCell.innerText = `$${(d.fee + specialVal).toFixed(2)} / 月`;
   }
 }
@@ -345,18 +340,16 @@ function calculateRow(sel) {
   }
 
   const extra = parseFloat(row.querySelector(".special select").value || 0);
-  let baseFee = d.fee ? d.fee + extra : 0;  // 若有 yearly 則 fee 為 0，另處理
+  let baseFee = d.fee ? d.fee + extra : 0;
   
   let year1 = 0, year2 = 0, text = "-";
 
   if (d.yearly) {
-    // 年繳服務 (電視$69.99)
     year1 = d.yearly; year2 = d.yearly * 2;
     text = d.contracts[months]?.free ? `免費 ${d.contracts[months].free} 個月` : "";
   } else {
     const rule = d.contracts[months];
     
-    // 特殊規則優先 (攝像頭、門磁、Prime、電話)
     if (rule.camera || rule.camera2) {
       const fee = rule.camera ? 9.99 : 13.99;
       year1 = 4.99 * 5 + fee * 6; year2 = year1 + fee * 12;
@@ -371,39 +364,28 @@ function calculateRow(sel) {
     } else if (rule.homePhone24) {
       year1 = 8.99 * 9; year2 = year1 + 8.99 * 9; text = rule.discountText;
     } else {
-      // 一般網路方案 (含 Telus, Rogers) 或有 free/credit 欄位
       let free = rule.free || 0;
       let credit = rule.credit || 0;
       
-      // 針對 TELUS 3000 且 extra = -20 的特殊 credit -50
       let extraCredit = 0;
       let specialDiscountText = "";
       if (service === "網絡-Telus (3000M)" && extra === -20) {
-        extraCredit = 50;   // 額外 -50 credit
-        specialDiscountText = "-50 Credit";   // 要顯示在優惠欄
+        extraCredit = 50;
+        specialDiscountText = "-50 Credit";
       }
 
-      // 總 credit 為既有 credit (通常是 Rogers 200) 加上 extraCredit (僅 Telus3000 -20 才有)
       const totalCredit = credit + extraCredit;
       
-      // 計算 year1 = baseFee * (12 - free) - totalCredit
-      // 注意 baseFee 已經包含 extra (例如 -20 或 -10)
       year1 = baseFee * (12 - free) - totalCredit;
       year2 = year1 + baseFee * 12;
       
-      // 組合優惠文字
       let parts = [];
       if (free > 0) parts.push(`免費 ${free} 個月`);
       if (totalCredit > 0) parts.push(`-$${totalCredit} Credit`);
-      // 若沒有任何優惠，但可能有特定文字 (例如 -20 方案要顯示 "-50 Credit" 已經包含在上面)
-      // 但為了確保 -20 方案有顯示 "-50 Credit" (即使 totalCredit = 50)
-      // 另外，如果 extra = -20 但 totalCredit = 50，我們已經推入 "-$50 Credit"
-      // 若 extra = -10 無 credit，則 parts 可能是空，需要給個預設文字或空
       
       if (parts.length > 0) {
         text = parts.join('，');
       } else {
-        // 如果沒有任何 free / credit，但是是 Telus 3000 -10 方案，優惠欄空白或可顯示 "手機優惠-$10"
         if (service === "網絡-Telus (3000M)" && extra === -10) {
           text = "手機-$10 (月費已減)";
         } else if (service.includes("Telus") && extra === 0) {
@@ -437,7 +419,5 @@ function calcAvg() {
 }
 </script>
 
-
--->
 </body>
 </html>
