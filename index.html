@@ -218,10 +218,10 @@ const serviceData = {
     fee: 95,
     special: { 
       options: [
-        { text: "有EPP", extra: 0 },
-        { text: "沒有EPP", extra: 10 },
-        { text: "有KOODO/TELUS手機 -$10", extra: -10 },
-        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20, small: true }
+        { text: "有EPP", extra: -10 },
+        { text: "沒有EPP", extra: 0 },
+        { text: "有KOODO/TELUS手機 -$10", extra: -10, small: true, hasCredit: true },
+        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20, extraSmall: true, hasCredit: true }  
       ]
     },
     contracts: { 24: {} }, category: "network"
@@ -370,9 +370,11 @@ function calculateRow(sel) {
       let credit = rule.credit || 0;
       
       let extraCredit = 0;
-      if (service === "網絡-Telus (3000M)" && extra === -20) {
-        extraCredit = 50;
-      }
+// 檢查當前選項是否有 hasCredit 標記
+const specialOption = d.special.options.find(opt => opt.extra === extra);
+if (service === "網絡-Telus (3000M)" && specialOption && specialOption.hasCredit) {
+  extraCredit = 50;
+}
 
       const totalCredit = credit + extraCredit;
       
