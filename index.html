@@ -1,14 +1,21 @@
+以下是您所需的三合一計劃網頁的完整代碼。它實現了服務選擇、合約期、客戶類型及優惠計算，並已根據您的要求新增了TELUS 3000M的-50 Credit優惠，以及「平安通」服務選項。
+```html
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>三合一計劃</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>三合一計劃｜智能組合計算機</title>
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Segoe UI", "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   background: #f4f6f9;
   padding: 12px;
+  margin: 0;
 }
 
 h1 {
@@ -17,6 +24,7 @@ h1 {
   font-size: 36px;
   font-weight: 700;
   color: #2c3e50;
+  letter-spacing: -0.3px;
 }
 
 .tip {
@@ -31,11 +39,13 @@ h1 {
   border-left: 4px solid #f1c40f;
   line-height: 1.5;
   font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .tip .highlight {
   display: block;
   margin-top: 4px;
+  font-weight: 500;
 }
 
 table {
@@ -46,7 +56,7 @@ table {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   font-size: 16px;
 }
 
@@ -56,6 +66,7 @@ th {
   border-bottom: 1px solid #ddd;
   font-weight: 700;
   font-size: 18px;
+  color: #1e2a3a;
 }
 
 td {
@@ -63,16 +74,25 @@ td {
   border-bottom: 1px solid #eee;
   text-align: center;
   font-size: 16px;
+  vertical-align: middle;
 }
 
 select {
-  padding: 10px 14px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
   border: 1px solid #ccc;
   background: white;
-  font-size: 16px;
+  font-size: 15px;
   width: 100%;
-  box-sizing: border-box;
+  max-width: 220px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+select:focus {
+  border-color: #007aff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,122,255,0.2);
 }
 
 select.required {
@@ -80,7 +100,7 @@ select.required {
   box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
 }
 
-/* 分類顏色 */
+/* 分類顏色樣式 (選單視覺) */
 option.category-header { font-weight: bold; background-color: #f8f9fa; }
 option.network-option { background-color: #cce5ff; }
 option.tv-option { background-color: #e6ccff; }
@@ -88,8 +108,8 @@ option.camera-option { background-color: #ccffcc; }
 option.door-option { background-color: #fff0cc; }
 option.prime-option { background-color: #ffcccc; }
 option.phone-option { background-color: #ffe6cc; }
+option.safety-option { background-color: #d4f1f9; }
 
-/* 特選客戶選單中的小字選項 */
 .special-small {
   font-size: 0.9em;
   background-color: #e3f2fd;
@@ -99,11 +119,11 @@ option.phone-option { background-color: #ffe6cc; }
   margin: 28px auto;
   max-width: 1100px;
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border-radius: 14px;
+  border-radius: 20px;
   padding: 24px;
   font-size: 20px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
   border: 1px solid #e9ecef;
   display: flex;
   justify-content: center;
@@ -119,8 +139,9 @@ option.phone-option { background-color: #ffe6cc; }
 
 .total-label {
   font-size: 16px;
-  color: #666;
+  color: #555;
   margin-bottom: 8px;
+  font-weight: 500;
 }
 
 .total-value {
@@ -128,9 +149,10 @@ option.phone-option { background-color: #ffe6cc; }
   font-weight: 700;
   font-size: 32px;
   background: #f0f7ff;
-  padding: 8px 20px;
-  border-radius: 10px;
-  min-width: 140px;
+  padding: 8px 24px;
+  border-radius: 36px;
+  min-width: 160px;
+  letter-spacing: 1px;
 }
 
 .tax-value {
@@ -140,79 +162,94 @@ option.phone-option { background-color: #ffe6cc; }
 
 @media (max-width: 768px) {
   thead { display: none; }
-  tbody tr { display: block; margin-bottom: 16px; padding: 16px; background: #fff; border-radius: 14px; }
-  tbody td { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border: none; }
-  tbody td::before { content: attr(data-label); font-weight: 600; color: #555; }
-  select { width: 60%; }
-  .total-box { flex-direction: column; gap: 15px; }
+  tbody tr { 
+    display: block; 
+    margin-bottom: 20px; 
+    padding: 16px; 
+    background: #fff; 
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  tbody td { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 0; 
+    border: none;
+    gap: 12px;
+  }
+  tbody td::before { 
+    content: attr(data-label); 
+    font-weight: 600; 
+    color: #2c3e50;
+    width: 40%;
+    font-size: 15px;
+  }
+  select { 
+    width: 60%; 
+    max-width: none;
+  }
+  .total-box { 
+    flex-direction: column; 
+    gap: 15px; 
+  }
+  .total-value {
+    font-size: 26px;
+    padding: 6px 20px;
+  }
 }
 </style>
 </head>
 <body>
 
-<h1>三合一計劃</h1>
+<h1>📡 三合一計劃組合</h1>
 <div class="tip">
   💡 小提示：選取合約後才能顯示平均每月費用<br>      
-  <span class="highlight">（平均每月費用是按 2 年總支出計算）</span>
+  <span class="highlight">（平均每月費用是按 2 年總支出計算，包含所有折扣/贈送月數/credit）</span>
 </div>
 
-<table>
-<thead>
-<tr>
-  <th>服務</th>
-  <th>合約期</th>
-  <th>每月 / 每年價錢</th>
-  <th>特選客戶</th>
-  <th>優惠</th>
-  <th>首年總價</th>
-  <th>2年總價</th>
-</tr>
-</thead>
-
-<tbody>
-<script>
-for(let i=0; i<3; i++){
-  document.write(`
-  <tr>
-    <td data-label="服務"><select onchange="onServiceChange(this)"></select></td>
-    <td data-label="合約"><select onchange="calculateRow(this)"></select></td>
-    <td data-label="價錢" class="price">-</td>
-    <td data-label="客戶類型" class="special">
-      <select onchange="calculateRow(this)">
-        <option value="0">--特選客戶--</option>
-      </select>
-    </td>
-    <td data-label="優惠" class="discount">-</td>
-    <td data-label="首年" class="year1">-</td>
-    <td data-label="2年" class="year2">-</td>
-  </tr>`);
-}
-</script>
-</tbody>
+<table id="serviceTable">
+  <thead>
+    <tr>
+      <th>服務</th>
+      <th>合約期</th>
+      <th>每月 / 每年價錢</th>
+      <th>特選客戶</th>
+      <th>優惠內容</th>
+      <th>首年總價</th>
+      <th>2年總價</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- 三行服務列，動態產生 (JS 產生) -->
+  </tbody>
 </table>
 
 <div class="total-box">
   <div class="total-item">
-    <span class="total-label">平均每月費用 (未稅)</span>
+    <span class="total-label">📊 平均每月費用 (未稅)</span>
     <span id="avg" class="total-value">-</span>
   </div>
   <div class="total-item">
-    <span class="total-label">稅後價格 (12% TAX)</span>
+    <span class="total-label">🧾 稅後價格 (12% GST/PST)</span>
     <span id="avgTax" class="total-value tax-value">-</span>
   </div>
 </div>
 
 <script>
+// ---------- 服務資料庫 (含新增「平安通」) ----------
 const serviceData = {
   "網絡-Telus (250M)": {
     fee: 63,
     special: { options: [{ text: "有EPP", extra: 0 }, { text: "沒有EPP", extra: 10 }] },
-    contracts: { 24: {} }, category: "network"
+    contracts: { 24: {} }, 
+    category: "network"
   },
   "網絡-Telus (1000M)": {
     fee: 73,
     special: { options: [{ text: "有EPP", extra: 0 }, { text: "沒有EPP", extra: 10 }] },
-    contracts: { 24: {} }, category: "network"
+    contracts: { 24: {} }, 
+    category: "network"
   },
   "網絡-Telus (3000M)": {
     fee: 95,
@@ -220,197 +257,414 @@ const serviceData = {
       options: [
         { text: "有EPP", extra: -10 },
         { text: "沒有EPP", extra: 0 },
-        { text: "有KOODO/TELUS手機 -$10", extra: -10, small: true, hasCredit: true },
-        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20, extraSmall: true, hasCredit: true }  
+        { text: "有KOODO/TELUS手機 -$10", extra: -10, small: true, hasCredit: true, creditValue: 50 },   // 增加額外 $50 credit
+        { text: "有EPP + KOODO/TELUS手機 -$20", extra: -20, extraSmall: true, hasCredit: true, creditValue: 50 }
       ]
     },
-    contracts: { 24: {} }, category: "network"
+    contracts: { 24: {} }, 
+    category: "network"
   },
   "網絡-Rogers (300M)": {
     fee: 55,
     special: { options: [{ text: "有Rogers/Fido手機", extra: 0 }, { text: "沒有Rogers/Fido手機", extra: 10 }] },
-    contracts: { 24: { credit: 200 } }, category: "network"
+    contracts: { 24: { credit: 200 } }, 
+    category: "network"
   },
   "網絡-Rogers (1000M)": {
     fee: 65,
     special: { options: [{ text: "有Rogers/Fido手機", extra: 0 }, { text: "沒有Rogers/Fido手機", extra: 10 }] },
-    contracts: { 24: { credit: 200 } }, category: "network"
+    contracts: { 24: { credit: 200 } }, 
+    category: "network"
   },
   "網絡-Rogers (2000M)": {
     fee: 70,
     special: { options: [{ text: "有Rogers/Fido手機", extra: 0 }, { text: "沒有Rogers/Fido手機", extra: 10 }] },
-    contracts: { 24: { credit: 200 } }, category: "network"
+    contracts: { 24: { credit: 200 } }, 
+    category: "network"
   },
-  "TVB電視": { fee: 11.99, contracts: { 12: { free: 3 }, 18: { free: 4 } }, category: "tv" },
-  "電視$69.99": { yearly: 69.99, contracts: { 15: { free: 3 } }, category: "tv" },
-  "攝像頭 $9.99": { fee: 9.99, contracts: { 24: { camera: true, discountText: "首月免費，2~6月$4.99" } }, category: "camera" },
-  "攝像頭 $13.99": { fee: 13.99, contracts: { 24: { camera2: true, discountText: "首月免費，2~6月$4.99" } }, category: "camera" },
-  "門磁 $9.99": { fee: 9.99, contracts: { 24: { doorSensor1: true, discountText: "首12月免費" } }, category: "door" },
-  "門磁 $13.99": { fee: 13.99, contracts: { 24: { doorSensor2: true, discountText: "首3月$4.99" } }, category: "door" },
-  "Prime APP": { fee: 8.99, contracts: { 18: { prime: true, discountText: "首半年$4.49" } }, category: "prime" },
-  "家居電話": { fee: 8.99, contracts: { 18: { homePhone18: true, discountText: "首半年$4.5" }, 24: { homePhone24: true, discountText: "首3月免費,最後3月免費" } }, category: "phone" }
+  "TVB電視": { 
+    fee: 11.99, 
+    contracts: { 12: { free: 3 }, 18: { free: 4 } }, 
+    category: "tv" 
+  },
+  "電視$69.99": { 
+    yearly: 69.99, 
+    contracts: { 15: { free: 3 } }, 
+    category: "tv" 
+  },
+  "攝像頭 $9.99": { 
+    fee: 9.99, 
+    contracts: { 24: { camera: true, discountText: "首月免費，2~6月$4.99" } }, 
+    category: "camera" 
+  },
+  "攝像頭 $13.99": { 
+    fee: 13.99, 
+    contracts: { 24: { camera2: true, discountText: "首月免費，2~6月$4.99" } }, 
+    category: "camera" 
+  },
+  "門磁 $9.99": { 
+    fee: 9.99, 
+    contracts: { 24: { doorSensor1: true, discountText: "首12月免費" } }, 
+    category: "door" 
+  },
+  "門磁 $13.99": { 
+    fee: 13.99, 
+    contracts: { 24: { doorSensor2: true, discountText: "首3月$4.99" } }, 
+    category: "door" 
+  },
+  "Prime APP": { 
+    fee: 8.99, 
+    contracts: { 18: { prime: true, discountText: "首半年$4.49" } }, 
+    category: "prime" 
+  },
+  "家居電話": { 
+    fee: 8.99, 
+    contracts: { 
+      18: { homePhone18: true, discountText: "首半年$4.5" }, 
+      24: { homePhone24: true, discountText: "首3月免費,最後3月免費" } 
+    }, 
+    category: "phone" 
+  },
+  // ***** 新增服務：平安通 *****
+  "平安通 平安鐘服務": { 
+    fee: 9.99, 
+    contracts: { 
+      12: { safetyCare: true, discountText: "首2個月 $4.99/月" }
+    }, 
+    category: "safety" 
+  }
 };
 
-function initServiceOptions() {
+// ---------- 全域輔助函數 ----------
+// 初始化三個服務列 (產生三組下拉選單)
+function buildTableRows() {
+  const tbody = document.querySelector("#serviceTable tbody");
+  tbody.innerHTML = "";
+  for (let i = 0; i < 3; i++) {
+    const tr = document.createElement("tr");
+    // 服務欄位
+    const tdService = document.createElement("td");
+    tdService.setAttribute("data-label", "服務");
+    const serviceSelect = document.createElement("select");
+    serviceSelect.setAttribute("onchange", "onServiceChange(this)");
+    tdService.appendChild(serviceSelect);
+    
+    // 合約欄位
+    const tdContract = document.createElement("td");
+    tdContract.setAttribute("data-label", "合約");
+    const contractSelect = document.createElement("select");
+    contractSelect.setAttribute("onchange", "calculateRow(this)");
+    tdContract.appendChild(contractSelect);
+    
+    // 價錢顯示
+    const tdPrice = document.createElement("td");
+    tdPrice.setAttribute("data-label", "價錢");
+    tdPrice.className = "price";
+    tdPrice.innerText = "-";
+    
+    // 特選客戶
+    const tdSpecial = document.createElement("td");
+    tdSpecial.setAttribute("data-label", "客戶類型");
+    tdSpecial.className = "special";
+    const specialSelect = document.createElement("select");
+    specialSelect.setAttribute("onchange", "calculateRow(this)");
+    tdSpecial.appendChild(specialSelect);
+    
+    // 優惠內容
+    const tdDiscount = document.createElement("td");
+    tdDiscount.setAttribute("data-label", "優惠");
+    tdDiscount.className = "discount";
+    tdDiscount.innerText = "-";
+    
+    // 首年總價
+    const tdYear1 = document.createElement("td");
+    tdYear1.setAttribute("data-label", "首年");
+    tdYear1.className = "year1";
+    tdYear1.innerText = "-";
+    
+    // 2年總價
+    const tdYear2 = document.createElement("td");
+    tdYear2.setAttribute("data-label", "2年");
+    tdYear2.className = "year2";
+    tdYear2.innerText = "-";
+    
+    tr.appendChild(tdService);
+    tr.appendChild(tdContract);
+    tr.appendChild(tdPrice);
+    tr.appendChild(tdSpecial);
+    tr.appendChild(tdDiscount);
+    tr.appendChild(tdYear1);
+    tr.appendChild(tdYear2);
+    tbody.appendChild(tr);
+  }
+  // 填充服務選項 (基本選單)
+  initAllServiceOptions();
+}
+
+function initAllServiceOptions() {
+  const allServiceSelects = document.querySelectorAll("tbody tr td:first-child select");
+  const baseOptionsHtml = `
+    <option value="">-- 選擇服務 --</option>
+    <option disabled class="category-header">─ 網絡服務 ─</option>
+    <option value="網絡-Telus (250M)" class="network-option">網絡-Telus (250M)</option>
+    <option value="網絡-Telus (1000M)" class="network-option">網絡-Telus (1000M)</option>
+    <option value="網絡-Telus (3000M)" class="network-option">網絡-Telus (3000M)</option>
+    <option value="網絡-Rogers (300M)" class="network-option">網絡-Rogers (300M)</option>
+    <option value="網絡-Rogers (1000M)" class="network-option">網絡-Rogers (1000M)</option>
+    <option value="網絡-Rogers (2000M)" class="network-option">網絡-Rogers (2000M)</option>
+    <option disabled class="category-header">─ 電視服務 ─</option>
+    <option value="TVB電視" class="tv-option">TVB電視</option>
+    <option value="電視$69.99" class="tv-option">電視$69.99</option>
+    <option disabled class="category-header">─ 攝像頭服務 ─</option>
+    <option value="攝像頭 $9.99" class="camera-option">攝像頭 $9.99</option>
+    <option value="攝像頭 $13.99" class="camera-option">攝像頭 $13.99</option>
+    <option disabled class="category-header">─ 門磁服務 ─</option>
+    <option value="門磁 $9.99" class="door-option">門磁 $9.99</option>
+    <option value="門磁 $13.99" class="door-option">門磁 $13.99</option>
+    <option disabled class="category-header">─ Prime APP ─</option>
+    <option value="Prime APP" class="prime-option">Prime APP</option>
+    <option disabled class="category-header">─ 家居電話 ─</option>
+    <option value="家居電話" class="phone-option">家居電話</option>
+    <option disabled class="category-header">─ 關愛服務 ─</option>
+    <option value="平安通 平安鐘服務" class="safety-option">平安通 平安鐘服務 ($9.99/月)</option>
+  `;
+  allServiceSelects.forEach(sel => {
+    sel.innerHTML = baseOptionsHtml;
+  });
+  // 重置每行的合約 & 特選客戶初始為空
   document.querySelectorAll("tbody tr").forEach(row => {
-    const serviceSel = row.querySelectorAll("select")[0];
-    serviceSel.innerHTML = `
-      <option value="">-- 選擇服務 --</option>
-      <option disabled class="category-header">─ 網絡服務 ─</option>
-      <option value="網絡-Telus (250M)" class="network-option">網絡-Telus (250M)</option>
-      <option value="網絡-Telus (1000M)" class="network-option">網絡-Telus (1000M)</option>
-      <option value="網絡-Telus (3000M)" class="network-option">網絡-Telus (3000M)</option>
-      <option value="網絡-Rogers (300M)" class="network-option">網絡-Rogers (300M)</option>
-      <option value="網絡-Rogers (1000M)" class="network-option">網絡-Rogers (1000M)</option>
-      <option value="網絡-Rogers (2000M)" class="network-option">網絡-Rogers (2000M)</option>
-      <option disabled class="category-header">─ 電視服務 ─</option>
-      <option value="TVB電視" class="tv-option">TVB電視</option>
-      <option value="電視$69.99" class="tv-option">電視$69.99</option>
-      <option disabled class="category-header">─ 攝像頭服務 ─</option>
-      <option value="攝像頭 $9.99" class="camera-option">攝像頭 $9.99</option>
-      <option value="攝像頭 $13.99" class="camera-option">攝像頭 $13.99</option>
-      <option disabled class="category-header">─ 門磁服務 ─</option>
-      <option value="門磁 $9.99" class="door-option">門磁 $9.99</option>
-      <option value="門磁 $13.99" class="door-option">門磁 $13.99</option>
-      <option disabled class="category-header">─ Prime APP ─</option>
-      <option value="Prime APP" class="prime-option">Prime APP</option>
-      <option disabled class="category-header">─ 家居電話 ─</option>
-      <option value="家居電話" class="phone-option">家居電話</option>
-    `;
-    row.querySelectorAll("select")[1].innerHTML = '<option value="">-- 合約期 --</option>';
+    const contractSel = row.querySelectorAll("select")[1];
+    const specialSel = row.querySelector(".special select");
+    contractSel.innerHTML = '<option value="">-- 合約期 --</option>';
+    specialSel.innerHTML = '<option value="0">--特選客戶--</option>';
+    // 重置顯示
+    row.querySelector(".price").innerText = "-";
+    row.querySelector(".discount").innerText = "-";
+    row.querySelector(".year1").innerText = "-";
+    row.querySelector(".year2").innerText = "-";
   });
 }
 
-initServiceOptions();
-
+// 服務變更時: 更新合約下拉、特選客戶下拉、顯示基礎月費/年費
 function onServiceChange(sel) {
   const row = sel.closest("tr");
   const contractSel = row.querySelectorAll("select")[1];
   const specialSel = row.querySelector(".special select");
+  const serviceName = sel.value;
+  const data = serviceData[serviceName];
   
+  // 清空合約與特選客戶
   contractSel.innerHTML = '<option value="">-- 合約期 --</option>';
   specialSel.innerHTML = '<option value="0">--特選客戶--</option>';
   
-  const d = serviceData[sel.value];
-  
-  if (!d) {
+  if (!data) {
     row.querySelector(".price").innerText = "-";
-    calculateRow(sel);
+    calculateRow(sel);  // 觸發總價更新清除
     return;
   }
-
-  Object.keys(d.contracts).forEach(m => {
-    contractSel.innerHTML += `<option value="${m}">${m} 個月</option>`;
+  
+  // 載入合約期選項
+  Object.keys(data.contracts).forEach(monthVal => {
+    contractSel.innerHTML += `<option value="${monthVal}">${monthVal} 個月</option>`;
   });
-
-  if (d.special) {
-    d.special.options.forEach(o => {
-      const className = o.small ? 'class="special-small"' : '';
-      specialSel.innerHTML += `<option value="${o.extra}" ${className}>${o.text}</option>`;
+  
+  // 載入特選客戶選項 (若有special)
+  if (data.special && data.special.options) {
+    data.special.options.forEach(opt => {
+      let classNameAttr = '';
+      if (opt.small || opt.extraSmall) classNameAttr = 'class="special-small"';
+      // 保留 creditValue 屬性以便計算時抓取額外credit，儲存data屬性
+      const creditDataAttr = (opt.hasCredit && opt.creditValue) ? `data-credit="${opt.creditValue}"` : '';
+      specialSel.innerHTML += `<option value="${opt.extra}" ${classNameAttr} ${creditDataAttr}>${opt.text}</option>`;
     });
   }
+  
+  // 更新價格顯示欄位 (月費/年費)
   updatePriceDisplay(row);
   calculateRow(sel);
 }
 
 function updatePriceDisplay(row) {
-  const service = row.querySelectorAll("select")[0].value;
-  const d = serviceData[service];
+  const serviceSelect = row.querySelectorAll("select")[0];
+  const serviceName = serviceSelect.value;
+  const d = serviceData[serviceName];
   if (!d) return;
   const priceCell = row.querySelector(".price");
-  const specialVal = parseFloat(row.querySelector(".special select").value || 0);
-
+  const specialSel = row.querySelector(".special select");
+  let extraVal = 0;
+  if (specialSel && specialSel.value !== "0" && specialSel.value !== "") {
+    extraVal = parseFloat(specialSel.value) || 0;
+  }
+  
   if (d.yearly) {
     priceCell.innerText = `$${d.yearly} / 年`;
-  } else if (d.fee) {
-    priceCell.innerText = `$${(d.fee + specialVal).toFixed(2)} / 月`;
+  } else if (d.fee !== undefined) {
+    let monthly = d.fee + extraVal;
+    priceCell.innerText = `$${monthly.toFixed(2)} / 月`;
+  } else {
+    priceCell.innerText = "-";
   }
 }
 
-function calculateRow(sel) {
-  const row = sel.closest("tr");
-  const service = row.querySelectorAll("select")[0].value;
-  const months = row.querySelectorAll("select")[1].value;
-  const d = serviceData[service];
+// 核心計算: 首年/2年總支出 及優惠說明
+function calculateRow(triggerEl) {
+  const row = triggerEl.closest("tr");
+  const serviceSelect = row.querySelectorAll("select")[0];
+  const serviceName = serviceSelect.value;
+  const contractMonths = row.querySelectorAll("select")[1].value;
+  const specialSel = row.querySelector(".special select");
+  const d = serviceData[serviceName];
   
+  // 更新價格顯示 (月費可能因特選客戶變動)
   updatePriceDisplay(row);
-
-  if (!d || !months) {
-    row.querySelectorAll(".discount,.year1,.year2").forEach(c => c.innerText = "-");
+  
+  if (!d || !contractMonths) {
+    row.querySelector(".discount").innerText = "-";
+    row.querySelector(".year1").innerText = "-";
+    row.querySelector(".year2").innerText = "-";
     calcAvg();
     return;
   }
-
-  const extra = parseFloat(row.querySelector(".special select").value || 0);
-  let baseFee = d.fee ? d.fee + extra : 0;
   
-  let year1 = 0, year2 = 0, text = "-";
-
-  if (d.yearly) {
-    year1 = d.yearly; year2 = d.yearly * 2;
-    text = d.contracts[months]?.free ? `免費 ${d.contracts[months].free} 個月` : "";
-  } else {
-    const rule = d.contracts[months];
-    
-    if (rule.camera || rule.camera2) {
-      const fee = rule.camera ? 9.99 : 13.99;
-      year1 = 4.99 * 5 + fee * 6; year2 = year1 + fee * 12;
-      text = rule.discountText;
-    } else if (rule.doorSensor1) {
-      year1 = 0; year2 = 9.99 * 12; text = rule.discountText;
-    } else if (rule.doorSensor2) {
-      year1 = 4.99 * 3 + 13.99 * 9; year2 = year1 + 13.99 * 12; text = rule.discountText;
-    } else if (rule.prime || rule.homePhone18) {
-      const p = rule.prime ? 4.49 : 4.5;
-      year1 = p * 6 + 8.99 * 6; year2 = year1 + 8.99 * 12; text = rule.discountText;
-    } else if (rule.homePhone24) {
-      year1 = 8.99 * 9; year2 = year1 + 8.99 * 9; text = rule.discountText;
-    } else {
-      let free = rule.free || 0;
-      let credit = rule.credit || 0;
-      
-      let extraCredit = 0;
-// 檢查當前選項是否有 hasCredit 標記
-const specialOption = d.special.options.find(opt => opt.extra === extra);
-if (service === "網絡-Telus (3000M)" && specialOption && specialOption.hasCredit) {
-  extraCredit = 50;
-}
-
-      const totalCredit = credit + extraCredit;
-      
-      year1 = baseFee * (12 - free) - totalCredit;
-      year2 = year1 + baseFee * 12;
-      
-      let parts = [];
-      if (free > 0) parts.push(`免費 ${free} 個月`);
-      if (totalCredit > 0) parts.push(`-$${totalCredit} Credit`);
-      
-      if (parts.length > 0) {
-        text = parts.join('，');
-      } else {
-        text = "-";
-      }
+  // 取得基礎月費 / 年費模式
+  let extraSpecial = 0;
+  let extraCreditFromOption = 0;  // 特殊選項額外credit (例如TELUS 3000M 手機優惠 -50)
+  if (specialSel && specialSel.value !== "0" && specialSel.value !== "") {
+    extraSpecial = parseFloat(specialSel.value) || 0;
+    // 抓取選定option的額外credit (若有 data-credit)
+    const selectedOpt = specialSel.options[specialSel.selectedIndex];
+    if (selectedOpt && selectedOpt.dataset && selectedOpt.dataset.credit) {
+      extraCreditFromOption = parseFloat(selectedOpt.dataset.credit) || 0;
     }
   }
-
-  row.querySelector(".discount").innerText = text;
-  row.querySelector(".year1").innerText = year1 !== 0 ? "$" + year1.toFixed(2) : "$0.00";
-  row.querySelector(".year2").innerText = year2 !== 0 ? "$" + year2.toFixed(2) : "$0.00";
+  
+  let baseMonthly = d.fee ? d.fee + extraSpecial : 0;
+  const isYearlyPlan = d.yearly ? true : false;
+  const rule = d.contracts[contractMonths];
+  let year1Total = 0, year2Total = 0;
+  let discountText = "-";
+  
+  // 特殊邏輯處理 (攝像頭/門磁/prime/家居電話/平安通)
+  if (rule.camera || rule.camera2) {
+    const fee = rule.camera ? 9.99 : 13.99;
+    // 首年: 第1月免費，2~6月 $4.99 (5個月), 7~12月原價 (6個月)
+    year1Total = (4.99 * 5) + (fee * 6);
+    year2Total = year1Total + (fee * 12);
+    discountText = rule.discountText;
+  } 
+  else if (rule.doorSensor1) {
+    // 門磁 $9.99: 首12月免費
+    year1Total = 0;
+    year2Total = 9.99 * 12;
+    discountText = rule.discountText;
+  }
+  else if (rule.doorSensor2) {
+    // 門磁 $13.99: 首3月 $4.99/月，之後9月原價
+    year1Total = (4.99 * 3) + (13.99 * 9);
+    year2Total = year1Total + (13.99 * 12);
+    discountText = rule.discountText;
+  }
+  else if (rule.prime || rule.homePhone18) {
+    const promoPrice = rule.prime ? 4.49 : 4.5;
+    year1Total = (promoPrice * 6) + (8.99 * 6);
+    year2Total = year1Total + (8.99 * 12);
+    discountText = rule.discountText;
+  }
+  else if (rule.homePhone24) {
+    // 首3月免費, 最後3月免費 => 24個月內總共18個月付費
+    year1Total = 8.99 * 9;   // 前9個月付費(第1-3月免費,4-12月收9個月)
+    year2Total = year1Total + (8.99 * 9); // 第二年最後3月免費 => 9個月付費
+    discountText = rule.discountText;
+  }
+  else if (rule.safetyCare) {
+    // 平安通: 一年合約 (12個月) 首2個月4.99, 其餘10個月原價9.99
+    // 因為只有一年合約，但總價計算需要2年總支出: 第二年可視為續約相同條件？但為符合平均概念: 兩年合約只能選12個月, 邏輯：2年總支出 = 首年優惠 + 第二年原價12個月
+    // 詳細: 首年 = 4.99*2 + 9.99*10 = 9.98 + 99.9 = 109.88；第二年若無優惠 = 9.99*12 = 119.88；總和 = 229.76
+    const firstYear = (4.99 * 2) + (9.99 * 10);
+    const secondYear = 9.99 * 12;
+    year1Total = firstYear;
+    year2Total = firstYear + secondYear;
+    discountText = rule.discountText;
+  }
+  else {
+    // 標準合約: 贈送月份 & 帳單credit
+    let freeMonths = rule.free || 0;
+    let creditAmount = rule.credit || 0;
+    // 加總特殊選項提供的額外credit (ex: Telus 3000M -50)
+    let totalCredit = creditAmount + extraCreditFromOption;
+    
+    // 首年 = baseMonthly * (12 - freeMonths) - totalCredit
+    year1Total = baseMonthly * (12 - freeMonths) - totalCredit;
+    // 二年總支出 = 首年支出 + baseMonthly * 12
+    year2Total = year1Total + (baseMonthly * 12);
+    
+    let parts = [];
+    if (freeMonths > 0) parts.push(`免費 ${freeMonths} 個月`);
+    if (totalCredit > 0) parts.push(`-$${totalCredit} Credit`);
+    if (parts.length > 0) discountText = parts.join('，');
+    else discountText = "-";
+  }
+  
+  // 確保數值不小於0 (理論上不會負數太誇張，但保險)
+  year1Total = Math.max(0, year1Total);
+  year2Total = Math.max(0, year2Total);
+  
+  // 更新DOM
+  row.querySelector(".discount").innerText = discountText;
+  row.querySelector(".year1").innerHTML = year1Total !== undefined ? "$" + year1Total.toFixed(2) : "$0.00";
+  row.querySelector(".year2").innerHTML = year2Total !== undefined ? "$" + year2Total.toFixed(2) : "$0.00";
+  
   calcAvg();
 }
 
+// 計算三行的平均每月總支出 (2年總和/24)
 function calcAvg() {
-  let total = 0;
-  document.querySelectorAll(".year2").forEach(c => {
-    if (c.innerText.startsWith("$")) total += parseFloat(c.innerText.slice(1));
-  });
-  
-  const avgVal = total / 24;
-  const avgTaxVal = avgVal * 1.12;
-
-  document.getElementById("avg").innerText = total > 0 ? `$${avgVal.toFixed(2)}` : "-";
-  document.getElementById("avgTax").innerText = total > 0 ? `$${avgTaxVal.toFixed(2)}` : "-";
+  let totalTwoYearCost = 0;
+  let anyValid = false;
+  const year2Cells = document.querySelectorAll(".year2");
+  for (let cell of year2Cells) {
+    const rawText = cell.innerText;
+    if (rawText && rawText.startsWith("$")) {
+      const val = parseFloat(rawText.slice(1));
+      if (!isNaN(val) && val >= 0) {
+        totalTwoYearCost += val;
+        anyValid = true;
+      }
+    }
+  }
+  if (!anyValid || totalTwoYearCost === 0) {
+    document.getElementById("avg").innerText = "-";
+    document.getElementById("avgTax").innerText = "-";
+    return;
+  }
+  const avgMonthly = totalTwoYearCost / 24;
+  const avgWithTax = avgMonthly * 1.12;
+  document.getElementById("avg").innerHTML = `$${avgMonthly.toFixed(2)}`;
+  document.getElementById("avgTax").innerHTML = `$${avgWithTax.toFixed(2)}`;
 }
+
+// 初始化頁面: 建立3行表格，設定所有監聽並重置
+function init() {
+  buildTableRows();
+  // 綁定全域額外監聽（當特選客戶變動時也會重新計算，calculateRow已含）
+  // 另外針對select變動可重新整理
+  document.querySelector("#serviceTable tbody").addEventListener("change", function(e) {
+    if(e.target && e.target.tagName === "SELECT") {
+      // 若變動的是服務欄位，onServiceChange已經呼叫calculateRow; 若合約或特選客戶直接呼叫calculateRow
+      // 但為防重複呼叫，但無副作用
+      const row = e.target.closest("tr");
+      if(row && (e.target.closest("td").getAttribute("data-label") === "服務" || e.target === row.querySelectorAll("select")[0])) {
+        // 已在onServiceChange內完成calculate
+      } else {
+        if (typeof calculateRow === "function") calculateRow(e.target);
+      }
+    }
+  });
+}
+
+// 執行初始化
+init();
 </script>
 </body>
 </html>
+```
