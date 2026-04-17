@@ -326,7 +326,7 @@ const serviceData = {
     category: "phone" 
   },
   // ***** 新增服務：平安通 *****
-  "平安通 平安鐘服務": { 
+  "平安通": { 
     fee: 9.99, 
     contracts: { 
       12: { safetyCare: true, discountText: "首2個月 $4.99/月" }
@@ -426,7 +426,7 @@ function initAllServiceOptions() {
     <option disabled class="category-header">─ 家居電話 ─</option>
     <option value="家居電話" class="phone-option">家居電話</option>
     <option disabled class="category-header">─ 關愛服務 ─</option>
-    <option value="平安通 平安鐘服務" class="safety-option">平安通 平安鐘服務 ($9.99/月)</option>
+    <option value="平安通" class="safety-option">平安通</option>
   `;
   allServiceSelects.forEach(sel => {
     sel.innerHTML = baseOptionsHtml;
