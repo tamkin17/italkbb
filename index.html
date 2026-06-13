@@ -5,98 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>三合一計劃</title>
 <style>
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
   font-family: "Segoe UI", "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-  background: #f4f6f9;
-  padding: 12px;
-  margin: 0;
+  background: #f4f6f9; padding: 12px; margin: 0;
 }
-
-h1 {
-  text-align: center;
-  margin-bottom: 12px;
-  font-size: 36px;
-  font-weight: 700;
-  color: #2c3e50;
-  letter-spacing: -0.3px;
-}
-
+h1 { text-align: center; margin-bottom: 12px; font-size: 36px; font-weight: 700; color: #2c3e50; }
 .tip {
-  text-align: center;
-  background: #fff8e1;
-  color: #e67e22;
-  padding: 14px;
-  border-radius: 8px;
-  margin: 0 auto 24px auto;
-  max-width: 1100px;
-  font-size: 18px;
-  border-left: 4px solid #f1c40f;
-  line-height: 1.5;
-  font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  text-align: center; background: #fff8e1; color: #e67e22; padding: 14px;
+  border-radius: 8px; margin: 0 auto 24px auto; max-width: 1100px; font-size: 18px;
+  border-left: 4px solid #f1c40f; line-height: 1.5; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-
-.tip .highlight {
-  display: block;
-  margin-top: 4px;
-  font-weight: 500;
-}
-
+.tip .highlight { display: block; margin-top: 4px; font-weight: 500; }
 table {
-  border-collapse: collapse;
-  width: 100%;
-  max-width: 1100px;
-  margin: auto;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  font-size: 16px;
+  border-collapse: collapse; width: 100%; max-width: 1100px; margin: auto;
+  background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); font-size: 16px;
 }
-
-th {
-  background: #eef2f7;
-  padding: 16px;
-  border-bottom: 1px solid #ddd;
-  font-weight: 700;
-  font-size: 18px;
-  color: #1e2a3a;
-}
-
-td {
-  padding: 14px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  font-size: 16px;
-  vertical-align: middle;
-}
-
-select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
-  font-size: 15px;
-  width: 100%;
-  max-width: 220px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-select:focus {
-  border-color: #007aff;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0,122,255,0.2);
-}
-
-select.required {
-  border-color: #dc3545;
-  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
-}
+th { background: #eef2f7; padding: 16px; border-bottom: 1px solid #ddd; font-weight: 700; font-size: 18px; color: #1e2a3a; }
+td { padding: 14px; border-bottom: 1px solid #eee; text-align: center; font-size: 16px; vertical-align: middle; }
+select { padding: 10px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; font-size: 15px; width: 100%; max-width: 220px; cursor: pointer; }
+select:focus { border-color: #007aff; outline: none; box-shadow: 0 0 0 2px rgba(0,122,255,0.2); }
 
 /* 分類顏色樣式 */
 option.category-header { font-weight: bold; background-color: #f8f9fa; }
@@ -108,93 +36,26 @@ option.prime-option { background-color: #ffcccc; }
 option.phone-option { background-color: #ffe6cc; }
 option.safety-option { background-color: #d4f1f9; }
 
-.special-small {
-  font-size: 0.9em;
-  background-color: #e3f2fd;
-}
-
 .total-box {
-  margin: 28px auto;
-  max-width: 1100px;
+  margin: 28px auto; max-width: 1100px;
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border-radius: 20px;
-  padding: 24px;
-  font-size: 20px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-  border: 1px solid #e9ecef;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
+  border-radius: 20px; padding: 24px; font-size: 20px; text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05); border: 1px solid #e9ecef;
+  display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;
 }
-
-.total-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.total-label {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.total-value {
-  color: #007aff;
-  font-weight: 700;
-  font-size: 32px;
-  background: #f0f7ff;
-  padding: 8px 24px;
-  border-radius: 36px;
-  min-width: 160px;
-  letter-spacing: 1px;
-}
-
-.tax-value {
-  color: #27ae60;
-  background: #ebf9f1;
-}
+.total-item { display: flex; flex-direction: column; align-items: center; }
+.total-label { font-size: 16px; color: #555; margin-bottom: 8px; font-weight: 500; }
+.total-value { color: #007aff; font-weight: 700; font-size: 32px; background: #f0f7ff; padding: 8px 24px; border-radius: 36px; min-width: 160px; }
+.tax-value { color: #27ae60; background: #ebf9f1; }
 
 @media (max-width: 768px) {
   thead { display: none; }
-  tbody tr { 
-    display: block; 
-    margin-bottom: 20px; 
-    padding: 16px; 
-    background: #fff; 
-    border-radius: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-  tbody td { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 10px 0; 
-    border: none;
-    gap: 12px;
-  }
-  tbody td::before { 
-    content: attr(data-label); 
-    font-weight: 600; 
-    color: #2c3e50;
-    width: 40%;
-    font-size: 15px;
-  }
-  select { 
-    width: 60%; 
-    max-width: none;
-  }
-  .total-box { 
-    flex-direction: column; 
-    gap: 15px; 
-  }
-  .total-value {
-    font-size: 26px;
-    padding: 6px 20px;
-  }
+  tbody tr { display: block; margin-bottom: 20px; padding: 16px; background: #fff; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+  tbody td { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border: none; gap: 12px; }
+  tbody td::before { content: attr(data-label); font-weight: 600; color: #2c3e50; width: 40%; font-size: 15px; }
+  select { width: 60%; max-width: none; }
+  .total-box { flex-direction: column; gap: 15px; }
+  .total-value { font-size: 26px; padding: 6px 20px; }
 }
 </style>
 </head>
@@ -218,8 +79,7 @@ option.safety-option { background-color: #d4f1f9; }
       <th>2年總價</th>
     </tr>
   </thead>
-  <tbody>
-    </tbody>
+  <tbody></tbody>
 </table>
 
 <div class="total-box">
@@ -234,9 +94,8 @@ option.safety-option { background-color: #d4f1f9; }
 </div>
 
 <script>
-// ---------- 全新結構化服務資料庫 ----------
 const serviceData = {
-  // --- Telus 網絡 (已更新價格與優惠) ---
+  // --- Telus 網絡 (500M 70/月, 1500M 85/月, 3000M 95/月，特選-$10) ---
   "網絡-Telus (500M)": {
     fee: 70,
     special: { options: [{ text: "有Koodo/Telus", extra: -10 }, { text: "沒有Koodo/Telus", extra: 0 }] },
@@ -284,8 +143,8 @@ const serviceData = {
   "TVB電視": { 
     fee: 11.99, 
     contracts: { 
-      12: { type: "standard", free: 3, renewAtBase: true }, 
-      18: { type: "standard", free: 4, renewAtBase: true } 
+      12: { type: "standard", free: 3 }, 
+      18: { type: "standard", free: 4 } 
     }, 
     category: "tv" 
   },
@@ -317,13 +176,13 @@ const serviceData = {
   },
   "Prime APP": { 
     fee: 8.99, 
-    contracts: { 18: { type: "tiered", introMonths: 6, introFee: 4.49, freeMonths: 0, text: "首半年$4.49", renewAtBase: true } }, 
+    contracts: { 18: { type: "tiered", introMonths: 6, introFee: 4.49, freeMonths: 0, text: "首半年$4.49" } }, 
     category: "prime" 
   },
   "家居電話": { 
     fee: 8.99, 
     contracts: { 
-      18: { type: "tiered", introMonths: 6, introFee: 4.5, freeMonths: 0, text: "首半年$4.5", renewAtBase: true }, 
+      18: { type: "tiered", introMonths: 6, introFee: 4.5, freeMonths: 0, text: "首半年$4.5" }, 
       24: { type: "tiered", introMonths: 0, introFee: 0, freeMonths: 6, text: "首3月免費,最後3月免費" } 
     }, 
     category: "phone" 
@@ -331,13 +190,12 @@ const serviceData = {
   "平安通": { 
     fee: 9.99, 
     contracts: { 
-      12: { type: "tiered", introMonths: 2, introFee: 4.99, freeMonths: 0, text: "首2個月 $4.99/月", renewAtBase: true }
+      12: { type: "tiered", introMonths: 2, introFee: 4.99, freeMonths: 0, text: "首2個月 $4.99/月" }
     }, 
     category: "safety" 
   }
 };
 
-// ---------- 初始化表格與事件 ----------
 function buildTableRows() {
   const tbody = document.querySelector("#serviceTable tbody");
   tbody.innerHTML = "";
@@ -387,7 +245,6 @@ function initAllServiceOptions() {
   document.querySelectorAll(".service-sel").forEach(sel => sel.innerHTML = baseOptionsHtml);
 }
 
-// 當變更服務：重置與更新子選單
 function handleServiceChange(row) {
   const serviceName = row.querySelector(".service-sel").value;
   const contractSel = row.querySelector(".contract-sel");
@@ -413,7 +270,7 @@ function handleServiceChange(row) {
   }
 
   updatePriceDisplay(row);
-  clearRowPrices(row); // 強制清除上一次的計價結果，避免殘留混淆
+  clearRowPrices(row);
 }
 
 function updatePriceDisplay(row) {
@@ -464,69 +321,48 @@ function calculateRow(row) {
   let year2Total = 0;
   let discountText = "-";
 
-  const baseMonthly = d.fee ? d.fee + specialVal : 0;
-
-  // 1. 年費專用計算邏輯 (如 電視$69.99)
+  // 1. 年費一次性收費方案（電視 $69.99）- 每年固定收費 $69.99
   if (rule.type === "yearly_plan") {
-    const yearlyFee = d.yearly;
-    // 15個月方案：首年(12個月)付完整一年；次年剩餘3個月因為「免費」，所以第13~24個月完全不用再付錢
-    year1Total = yearlyFee;
-    year2Total = yearlyFee; 
-    discountText = `免費 ${rule.freeMonths} 個月`;
+    year1Total = d.yearly; // 第一年一次性 $69.99
+    year2Total = d.yearly * 2; // 兩年總共付兩次 = $139.98
+    discountText = `首年包含免費 ${rule.freeMonths} 個月`;
   } 
   
-  // 2. 階梯式/特殊優惠計算邏輯 (如 攝像頭, 門磁, 平安通)
+  // 2. 階梯式/特價方案（平安通、攝像頭、門磁、家居電話等）- 優惠只在第一年，之後全部恢復標準原價
   else if (rule.type === "tiered") {
     discountText = rule.text;
+    const standardFee = d.fee; // 產品標準原價
     
-    // 計算 24 個月內每個月的實際花費
-    let monthlyCosts = [];
-    for (let m = 1; m <= 24; m++) {
-      if (m <= contractMonths) {
-        // 在合約期內
-        if (m <= rule.freeMonths) {
-          monthlyCosts.push(0);
-        } else if (m <= rule.freeMonths + rule.introMonths) {
-          monthlyCosts.push(rule.introFee);
-        } else {
-          monthlyCosts.push(baseMonthly);
-        }
+    // 計算第一年（前12個月）：扣除免費或特價月數
+    for (let m = 1; m <= 12; m++) {
+      if (m <= rule.freeMonths) {
+        year1Total += 0;
+      } else if (m <= rule.freeMonths + rule.introMonths) {
+        year1Total += rule.introFee;
       } else {
-        // 超出合約期 (如 12 或 18 個月合約)，防呆機制：自動判定是否按原價續約
-        monthlyCosts.push(rule.renewAtBase ? baseMonthly : baseMonthly);
+        year1Total += standardFee;
       }
     }
     
-    year1Total = monthlyCosts.slice(0, 12).reduce((a, b) => a + b, 0);
-    year2Total = monthlyCosts.reduce((a, b) => a + b, 0);
+    // 計算第二年（第13~24個月）：完全沒有優惠，12個月全部收標準原價
+    let year2Pure = standardFee * 12;
+    year2Total = year1Total + year2Pure;
   } 
   
-  // 3. 標準月費計算邏輯 (如 網絡方案, TVB電視)
+  // 3. 標準月費及扣 Credit 方案（網絡、TVB電視）- 所有優惠（免費月、Credit）皆在第一年扣完
   else if (rule.type === "standard") {
     const freeMonths = rule.free || 0;
     const credit = rule.credit || 0;
+    const baseMonthly = d.fee + specialVal; // 網絡月費（含特選客戶折減）
 
-    let monthlyCosts = [];
-    for (let m = 1; m <= 24; m++) {
-      if (m <= contractMonths) {
-        if (m <= freeMonths) {
-          monthlyCosts.push(0);
-        } else {
-          monthlyCosts.push(baseMonthly);
-        }
-      } else {
-        monthlyCosts.push(baseMonthly); // 超出合約期按原價續約
-      }
-    }
-
-    year1Total = monthlyCosts.slice(0, 12).reduce((a, b) => a + b, 0);
-    year2Total = monthlyCosts.reduce((a, b) => a + b, 0);
-
-    // 精準扣減一次性 Credit (防呆不扣超至負數)
-    if (credit > 0) {
-      year1Total = Math.max(0, year1Total - credit);
-      year2Total = Math.max(0, year2Total - credit);
-    }
+    // 第一年基礎費用：扣除免費月
+    let year1Base = baseMonthly * (12 - freeMonths);
+    // 第一年實付：直接全額扣減 Credit
+    year1Total = Math.max(0, year1Base - credit);
+    
+    // 第二年費用：完全按原合約月費收滿 12 個月
+    let year2Base = baseMonthly * 12;
+    year2Total = year1Total + year2Base;
 
     let parts = [];
     if (freeMonths > 0) parts.push(`免費 ${freeMonths} 個月`);
@@ -541,7 +377,6 @@ function calculateRow(row) {
   calcAvg();
 }
 
-// 計算三行總平均
 function calcAvg() {
   let totalTwoYearCost = 0;
   let anyValid = false;
@@ -570,10 +405,8 @@ function calcAvg() {
   document.getElementById("avgTax").innerText = `$${avgWithTax.toFixed(2)}`;
 }
 
-// 移除行內事件，全面改用統一事件監聽代理 (Event Delegation)
 function init() {
   buildTableRows();
-
   const tbody = document.querySelector("#serviceTable tbody");
   tbody.addEventListener("change", function(e) {
     const row = e.target.closest("tr");
