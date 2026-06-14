@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>三合一計劃</title>
+<title>多合一計劃組合</title>
 <style>
 * { box-sizing: border-box; }
 body {
@@ -61,7 +61,7 @@ option.safety-option { background-color: #d4f1f9; }
 </head>
 <body>
 
-<h1>📡 三合一計劃組合</h1>
+<h1>📡 多合一計劃組合</h1>
 <div class="tip">
   💡 小提示：選取合約後才能顯示平均每月費用<br>      
   <span class="highlight">（平均每月費用是按 2 年總支出計算，包含所有折扣/贈送月數/credit）</span>
@@ -95,7 +95,7 @@ option.safety-option { background-color: #d4f1f9; }
 
 <script>
 const serviceData = {
-  // --- Telus 網絡 (500M 70/月, 1500M 85/月, 3000M 95/月，特選-$10) ---
+  // --- Telus 網絡 ---
   "網絡-Telus (500M)": {
     fee: 70,
     special: { options: [{ text: "有Koodo/Telus", extra: -10 }, { text: "沒有Koodo/Telus", extra: 0 }] },
@@ -120,23 +120,23 @@ const serviceData = {
     contracts: { 24: { type: "standard" } }, 
     category: "network"
   },
-  // --- Rogers 網絡 ---
+  // --- Rogers 網絡 (Credit 全部為 175，2000M 為 $75) ---
   "網絡-Rogers (500M)": {
     fee: 55,
     special: { options: [{ text: "有Rogers/Fido手機", extra: 0 }, { text: "沒有Rogers/Fido手機", extra: 10 }] },
-    contracts: { 24: { type: "standard", credit: 200 } }, 
+    contracts: { 24: { type: "standard", credit: 175 } }, 
     category: "network"
   },
   "網絡-Rogers (1000M)": {
     fee: 65,
     special: { options: [{ text: "有Rogers/Fido手機", extra: 0 }, { text: "沒有Rogers/Fido手機", extra: 10 }] },
-    contracts: { 24: { type: "standard", credit: 200 } }, 
+    contracts: { 24: { type: "standard", credit: 175 } }, 
     category: "network"
   },
   "網絡-Rogers (2000M)": {
-    fee: 70,
+    fee: 75,
     special: { options: [{ text: "有Rogers/Fido手機", extra: 0 }, { text: "沒有Rogers/Fido手機", extra: 10 }] },
-    contracts: { 24: { type: "standard", credit: 200 } }, 
+    contracts: { 24: { type: "standard", credit: 175 } }, 
     category: "network"
   },
   // --- 電視服務 ---
@@ -199,7 +199,7 @@ const serviceData = {
 function buildTableRows() {
   const tbody = document.querySelector("#serviceTable tbody");
   tbody.innerHTML = "";
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     tbody.innerHTML += `
       <tr>
         <td data-label="服務"><select class="service-sel"></select></td>
@@ -302,7 +302,6 @@ function clearRowPrices(row) {
   calcAvg();
 }
 
-// ---------- 核心精準計算引擎 ----------
 function calculateRow(row) {
   const serviceName = row.querySelector(".service-sel").value;
   const contractMonths = parseInt(row.querySelector(".contract-sel").value);
@@ -321,19 +320,18 @@ function calculateRow(row) {
   let year2Total = 0;
   let discountText = "-";
 
-  // 1. 年費一次性收費方案（電視 $69.99）- 每年固定收費 $69.99
+  // 1. 年費方案 (電視 $69.99)
   if (rule.type === "yearly_plan") {
-    year1Total = d.yearly; // 第一年一次性 $69.99
-    year2Total = d.yearly * 2; // 兩年總共付兩次 = $139.98
-    discountText = `首年包含免費 ${rule.freeMonths} 個月`;
+    year1Total = d.yearly;
+    year2Total = d.yearly * 2;
+    discountText = `免費 ${rule.freeMonths} 個月`;
   } 
   
-  // 2. 階梯式/特價方案（平安通、攝像頭、門磁、家居電話等）- 優惠只在第一年，之後全部恢復標準原價
+  // 2. 階梯式/特價方案 (平安通、防盜等)
   else if (rule.type === "tiered") {
     discountText = rule.text;
-    const standardFee = d.fee; // 產品標準原價
+    const standardFee = d.fee;
     
-    // 計算第一年（前12個月）：扣除免費或特價月數
     for (let m = 1; m <= 12; m++) {
       if (m <= rule.freeMonths) {
         year1Total += 0;
@@ -343,24 +341,23 @@ function calculateRow(row) {
         year1Total += standardFee;
       }
     }
-    
-    // 計算第二年（第13~24個月）：完全沒有優惠，12個月全部收標準原價
     let year2Pure = standardFee * 12;
     year2Total = year1Total + year2Pure;
   } 
   
-  // 3. 標準月費及扣 Credit 方案（網絡、TVB電視）- 所有優惠（免費月、Credit）皆在第一年扣完
+  // 3. 標準月費及扣 Credit 方案 (網絡、TVB電視)
   else if (rule.type === "standard") {
     const freeMonths = rule.free || 0;
     const credit = rule.credit || 0;
-    const baseMonthly = d.fee + specialVal; // 網絡月費（含特選客戶折減）
+    
+    // 【核心修正】：baseMonthly 代表包含了特選客戶選擇（加/減錢）後的真實月費
+    const baseMonthly = d.fee + specialVal; 
 
-    // 第一年基礎費用：扣除免費月
+    // 第一年：真實月費算滿扣除免費後的月數，再減 Credit
     let year1Base = baseMonthly * (12 - freeMonths);
-    // 第一年實付：直接全額扣減 Credit
     year1Total = Math.max(0, year1Base - credit);
     
-    // 第二年費用：完全按原合約月費收滿 12 個月
+    // 第二年：雷打不動，直接用【真實月費 (含特選客戶狀態)】收滿 12 個月
     let year2Base = baseMonthly * 12;
     year2Total = year1Total + year2Base;
 
